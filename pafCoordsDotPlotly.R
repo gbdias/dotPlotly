@@ -227,21 +227,24 @@ if (opt$similarity) {
     ) +
     scale_x_continuous(breaks = chromMid,
                        minor_breaks = cumsum(as.numeric(chromMax)),
-                       labels = levels(alignments$refID)) +
+                       labels = levels(alignments$refID), expand = c(0,0)) +
     theme_bw() +
     theme(text = element_text(size = 8)) +
     theme(
       panel.grid.major.y = element_blank(),
       panel.grid.minor.y = element_blank(),
       panel.grid.major.x = element_blank(),
+      panel.grid.minor.x = element_line(color = "grey60"),
+      axis.text.x = element_text(size = 9, angle = 90, vjust = 0.5, hjust = 1),
       axis.text.y = element_text(size = 4, angle = 15)
     ) +
-    scale_y_continuous(breaks = yTickMarks, labels = substr(levels(alignments$queryID), start = 1, stop = 20)) +
+    scale_y_continuous(breaks = yTickMarks, 
+                       labels = substr(levels(alignments$queryID), start = 1, stop = 20), expand = c(0,0)) +
     { if(opt$h_lines){ geom_hline(yintercept = yTickMarks,
                                   color = "grey60",
                                   size = .1) }} +
     scale_color_distiller(palette = "Spectral") +
-    labs(color = "Mean Percent Identity (per query)", 
+    labs(color = "Mean % Identity\n(per query)", 
          title = paste0(   paste0("Post-filtering number of alignments: ", nrow(alignments),"\t\t\t\t"),
                            paste0("minimum alignment length (-m): ", opt$min_align,"\n"),
                            paste0("Post-filtering number of queries: ", length(unique(alignments$queryID)),"\t\t\t\t\t\t\t\t"),
@@ -273,20 +276,23 @@ if (opt$similarity) {
     )) +
     scale_x_continuous(breaks = chromMid,
                        minor_breaks = cumsum(as.numeric(chromMax)),
-                       labels = levels(alignments$refID)) +
+                       labels = levels(alignments$refID), expand = c(0,0)) +
     theme_bw() +
     theme(text = element_text(size = 8)) +
     theme(
       panel.grid.major.y = element_blank(),
       panel.grid.minor.y = element_blank(),
       panel.grid.major.x = element_blank(),
+      panel.grid.minor.x = element_line(color = "grey60"),
+      axis.text.x = element_text(size = 9, angle = 90, vjust = 0.5, hjust = 1),
       axis.text.y = element_text(size = 4, angle = 15)
     ) +
-    scale_y_continuous(breaks = yTickMarks, labels = substr(levels(alignments$queryID), start = 1, stop = 20)) +
+    scale_y_continuous(breaks = yTickMarks, 
+                       labels = substr(levels(alignments$queryID), start = 1, stop = 20), expand = c(0,0)) +
     { if(opt$h_lines){ geom_hline(yintercept = yTickMarks,
                                   color = "grey60",
                                   size = .1) }} +
-    labs(color = "Mean Percent Identity (per query)", 
+    labs(color = "Mean % Identity\n(per query)", 
          title = paste0(   paste0("Post-filtering number of alignments: ", nrow(alignments),"\t\t\t\t"),
                            paste0("minimum alignment length (-m): ", opt$min_align,"\n"),
                            paste0("Post-filtering number of queries: ", length(unique(alignments$queryID)),"\t\t\t\t\t\t\t\t"),
@@ -300,6 +306,10 @@ ggsave(filename = paste0(opt$output_filename, ".png"), width = opt$plot_size, he
 
 if(opt$interactive){
   pdf(NULL)
+  gp <- gp + 
+    scale_x_continuous(breaks = cumsum(as.numeric(chromMax)), 
+                       labels = levels(alignments$refID), expand = c(0,0)) + 
+    theme(panel.grid.major.x = element_line(color = "grey60"))
   gply = ggplotly(gp, tooltip = "text")
   htmlwidgets::saveWidget(as.widget(gply), file = paste0(opt$output_filename, ".html"))
 }
