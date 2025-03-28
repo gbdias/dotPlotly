@@ -191,6 +191,8 @@ if(opt$on_target & length(levels(alignments$refID)) > 1){
   alignments$percentIDmean = as.numeric(scaffoldIDmean[match(as.character(alignments$queryID), names(scaffoldIDmean))])
 }
 
+chromMid <- cumsum(as.numeric(chromMax))-(as.numeric(chromMax)/2)
+
 # plot
 yTickMarks = tapply(alignments$queryEnd2, alignments$queryID, max)
 options(warn = -1) # turn off warnings
@@ -223,14 +225,15 @@ if (opt$similarity) {
         )
       )
     ) +
-    scale_x_continuous(breaks = cumsum(as.numeric(chromMax)),
+    scale_x_continuous(breaks = chromMid,
+                       minor_breaks = cumsum(as.numeric(chromMax)),
                        labels = levels(alignments$refID)) +
     theme_bw() +
     theme(text = element_text(size = 8)) +
     theme(
       panel.grid.major.y = element_blank(),
       panel.grid.minor.y = element_blank(),
-      panel.grid.minor.x = element_blank(),
+      panel.grid.major.x = element_blank(),
       axis.text.y = element_text(size = 4, angle = 15)
     ) +
     scale_y_continuous(breaks = yTickMarks, labels = substr(levels(alignments$queryID), start = 1, stop = 20)) +
@@ -268,14 +271,15 @@ if (opt$similarity) {
         round(lenAln / 1000, 1)
       )
     )) +
-    scale_x_continuous(breaks = cumsum(chromMax),
+    scale_x_continuous(breaks = chromMid,
+                       minor_breaks = cumsum(as.numeric(chromMax)),
                        labels = levels(alignments$refID)) +
     theme_bw() +
     theme(text = element_text(size = 8)) +
     theme(
       panel.grid.major.y = element_blank(),
       panel.grid.minor.y = element_blank(),
-      panel.grid.minor.x = element_blank(),
+      panel.grid.major.x = element_blank(),
       axis.text.y = element_text(size = 4, angle = 15)
     ) +
     scale_y_continuous(breaks = yTickMarks, labels = substr(levels(alignments$queryID), start = 1, stop = 20)) +
